@@ -15,10 +15,11 @@ from app import payments
 database=importlib.import_module('app.db')
 main=importlib.import_module('app.main')
 worker=importlib.import_module('app.worker')
+public=importlib.import_module('app.public')
 
 @pytest.fixture
 def client(tmp_path,monkeypatch):
-    for module in [database,main,worker]:monkeypatch.setattr(module,'DATA',tmp_path)
+    for module in [database,main,worker,public]:monkeypatch.setattr(module,'DATA',tmp_path)
     with TestClient(app) as c:
         with database.db() as con:
             for tid,email in [('a','a@example.com'),('b','b@example.com')]:
@@ -93,9 +94,11 @@ def test_multiple_faces_rejected():
         with pytest.raises(ValueError,match='exatamente um rosto'):analyze(p,{'maintenance':'low','beard':'no','preference':'Natural'})
 
 def test_retention_independent_of_new_visits(client):
+    import os
+    orphan=main.DATA/'upload-orphan';orphan.mkdir();os.utime(orphan,(time.time()-7200,time.time()-7200))
     token=login(client);url=create(client,token).headers['location'];worker.run_one();cid=url.split('/')[-1]
     with database.db() as con:con.execute('UPDATE consultations SET created=? WHERE id=?',(time.time()-2*86400,cid))
-    worker.cleanup();assert not (main.DATA/cid).exists()
+    worker.cleanup();assert not (main.DATA/cid).exists() and not orphan.exists()
     assert client.get(url).status_code==200
     with database.db() as con:con.execute('UPDATE consultations SET created=? WHERE id=?',(time.time()-100*86400,cid))
     worker.cleanup();assert client.get(url).status_code==404
@@ -142,3 +145,38 @@ def test_backup_restores_database(client,tmp_path):
     with sqlite3.connect(snapshot) as restored:
         assert restored.execute('PRAGMA integrity_check').fetchone()[0]=='ok'
         assert restored.execute('SELECT client FROM consultations WHERE id=?',(cid,)).fetchone()[0]=='Cliente de teste'
+
+def test_public_payment_gate_and_delivery(client):
+    landing=client.get('/b/a');assert 'Sua consulta começa aqui' in landing.text
+    response=client.post('/b/a/iniciar',data={'client':'Cliente público'},follow_redirects=False)
+    route=response.headers['location'];public_token=route.split('/')[-1]
+    assert 'Primeiro, o pagamento' in client.get(route).text
+    fields={'csrf_token':public_token,'client':'Cliente público','preference':'Prático','maintenance':'low','beard':'no','consent':'yes'}
+    assert client.post(route+'/foto',data=fields,files={'photo':('photo.jpg',photo(),'image/jpeg')}).status_code==409
+    with database.db() as con:cid=con.execute('SELECT id FROM consultations WHERE client=?',('Cliente público',)).fetchone()[0]
+    staff=login(client)
+    client.post('/atendimento/'+cid+'/pagamento',data={'csrf_token':staff})
+    assert 'Primeiro, vamos ouvir' in client.get(route).text
+    assert client.post(route+'/foto',data=dict(fields,csrf_token='bad'),files={'photo':('photo.jpg',photo(),'image/jpeg')}).status_code==403
+    uploaded=client.post(route+'/foto',data=fields,files={'photo':('photo.jpg',photo(),'image/jpeg')})
+    assert uploaded.status_code==200
+    assert client.post(route+'/foto',data=fields,files={'photo':('photo.jpg',photo(),'image/jpeg')}).status_code==409
+    worker.run_one()
+    waiting=client.get(route);assert 'aguarda revisão' in waiting.text and 'Formato estimado' not in waiting.text
+    client.post('/atendimento/'+cid+'/aprovar',data={'csrf_token':staff,'notes':'Orientação aprovada.','next_visit':'2030-01-01','confirm':'yes'})
+    done=client.get(route);assert 'Orientação aprovada' in done.text and '/foto/' not in done.text
+    assert client.get('/c/'+public_token+'invalid').status_code==404
+
+def test_public_failed_photo_can_retry_without_new_payment(client):
+    r=client.post('/b/a/iniciar',data={'client':'Reenvio'},follow_redirects=False);route=r.headers['location'];token=route.split('/')[-1]
+    with database.db() as con:row=con.execute("SELECT id FROM consultations WHERE client='Reenvio'").fetchone();cid=row[0]
+    staff=login(client);client.post('/atendimento/'+cid+'/pagamento',data={'csrf_token':staff})
+    buf=io.BytesIO();Image.new('RGB',(512,512),'white').save(buf,format='JPEG')
+    fields={'csrf_token':token,'client':'Reenvio','preference':'Prático','maintenance':'low','beard':'no','consent':'yes'}
+    client.post(route+'/foto',data=fields,files={'photo':('photo.jpg',buf.getvalue(),'image/jpeg')});worker.run_one()
+    client.post('/atendimento/'+cid+'/nova-foto',data={'csrf_token':staff})
+    r=client.post(route+'/foto',data=fields,files={'photo':('photo.jpg',photo(),'image/jpeg')});assert r.status_code==200
+    worker.run_one()
+    with database.db() as con:
+        row=con.execute('SELECT status,paid FROM consultations WHERE id=?',(cid,)).fetchone()
+        assert row['status']=='pending_review' and row['paid']==1

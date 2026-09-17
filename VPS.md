@@ -24,7 +24,7 @@ docker compose exec app python -m app.manage create-user \
 docker compose ps
 ```
 
-A senha é lida com `getpass`, sem eco ou argumento no histórico. Abra o domínio e entre. Configure contato, cidade e preço. Faça uma consulta autorizada, revise e imprima o relatório. `GET /health` confirma a API; `docker compose logs --tail=50 worker` ajuda a diagnosticar a fila.
+A senha é lida com `getpass`, sem eco ou argumento no histórico. Abra o domínio e entre. Configure contato, cidade e preço. Em Configurações, copie a página pública da barbearia. O cliente inicia a consulta ali, paga e envia os dados quando o pagamento é confirmado. Também é possível iniciar diretamente pelo painel profissional. Faça uma consulta autorizada, revise e imprima o relatório. `GET /health` confirma a API; `docker compose logs --tail=50 worker` ajuda a diagnosticar a fila.
 
 ## Imagens sem GPU na VPS
 
@@ -44,7 +44,7 @@ docker compose up -d --force-recreate app worker
 
 1. Configure `MERCADOPAGO_ACCESS_TOKEN`, `MERCADOPAGO_WEBHOOK_SECRET`, `PUBLIC_URL` e mantenha `MERCADOPAGO_SANDBOX=true` inicialmente.
 2. No provedor, configure notificações de pagamento para `https://SEU-DOMINIO/webhooks/mercadopago`.
-3. Informe preço em Configurações. Em um atendimento, gere a cobrança e use as credenciais de comprador de teste da sua conta.
+3. Informe preço em Configurações. Abra a página pública da barbearia, inicie uma consulta e use as credenciais de comprador de teste da sua conta. A foto permanece bloqueada até a confirmação.
 4. Confirme que o webhook modifica o atendimento após consultar o pagamento na API. Retorno do navegador não altera situação financeira.
 5. Valide aprovação, repetição de notificação e reembolso na conta. Só depois troque para credenciais de produção e `MERCADOPAGO_SANDBOX=false`.
 
@@ -80,7 +80,7 @@ docker volume create visagismo-restore-test
 docker run --rm -i -v visagismo-restore-test:/restore alpine:3.22 \
   tar -xzf - -C /restore < /caminho/do/backup.tar.gz
 docker run --rm --read-only -v visagismo-restore-test:/restore:ro \
-  visagismo-b:1.0.0 python -c "import sqlite3; c=sqlite3.connect('file:/restore/visagismo.sqlite3?mode=ro',uri=True); print(c.execute('PRAGMA integrity_check').fetchone())"
+  visagismo-b:1.1.0 python -c "import sqlite3; c=sqlite3.connect('file:/restore/visagismo.sqlite3?mode=ro',uri=True); print(c.execute('PRAGMA integrity_check').fetchone())"
 ```
 
 Planeje a troca do volume apenas depois de verificar integridade e registros. Não use `docker compose down -v`: remove os dados.
@@ -99,6 +99,7 @@ Para rollback, volte ao commit conhecido e reconstrua. Futuras mudanças de sche
 ## Monitoramento e limites
 
 - Acompanhe saúde da API, processo do worker, espaço em disco, consultas com falha e custo de imagem na conta do provedor.
+- Os logs de acesso HTTP estão desativados para não gravar tokens dos links privados. Não habilite logs de URL completa no proxy.
 - Mantenha relógio/NTP correto: assinaturas de pagamento fora da janela de 5 minutos são rejeitadas.
 - Fotos expiram em 24 horas e relatórios em 90 dias por padrão. A rotina depende do worker; processamentos ativos não são apagados no meio da execução.
 - Complete os dados do controlador e revisão da política de privacidade antes de atender clientes.

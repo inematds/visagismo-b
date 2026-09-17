@@ -84,7 +84,7 @@ def analyze(path, answers):
     return json.loads(json.dumps({'shape':SHAPES.get(c['morfotipo']['forma'],'misto'), 'cut':cut,
        'reason':reason,'care':care,'beard':beard,'preference':answers['preference'],
        'length_cm':recipe['largo_cm'],'sides':side,'fringe':fringe,'measurements':m['ratios'],'landmarks':len(landmarks), 'prompt_style':english,
-       'version':'1.0.0','simulation':False},default=_json_safe))
+       'version':'1.1.0','simulation':False},default=_json_safe))
 
 def simulate(folder, result, beard):
     if not IMAGE_ENABLED: return 'Simulação não configurada. A orientação continua disponível.'

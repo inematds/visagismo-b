@@ -9,4 +9,4 @@ COPY 03-motor /app/03-motor
 RUN useradd --uid 10001 --create-home visagismo && mkdir /data && chown -R visagismo:visagismo /data /app
 USER visagismo
 EXPOSE 8080
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080", "--proxy-headers", "--forwarded-allow-ips", "*"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080", "--no-access-log", "--proxy-headers", "--forwarded-allow-ips", "*"]

@@ -8,6 +8,9 @@ from .engine import analyze, simulate
 
 def cleanup():
     now=time.time()
+    for folder in DATA.glob("upload-*"):
+        if folder.is_dir() and folder.stat().st_mtime < now-3600:
+            shutil.rmtree(folder,ignore_errors=True)
     with db() as con:
         con.execute('DELETE FROM sessions WHERE expires<?',(now,))
         con.execute('DELETE FROM login_attempts WHERE expires<?',(now,))

@@ -1,4 +1,4 @@
-# Visagismo B · v1.0.0
+# Visagismo B · v1.1.0
 
 Consultoria de estilo para barbearias, em português, com análise facial real, revisão profissional e implantação em **VPS**.
 
@@ -6,7 +6,7 @@ Consultoria de estilo para barbearias, em português, com análise facial real, 
 
 ## O que está implementado
 
-- FastAPI, interface responsiva e painel por barbearia.
+- FastAPI, interface responsiva, página pública e painel por barbearia.
 - Login com senha protegida por scrypt, sessões revogáveis e proteção CSRF.
 - Questionário, upload JPEG/PNG/WEBP/HEIC e validação de tamanho/resolução.
 - MediaPipe Tasks com 478 pontos detectados; cálculo e classificação herdados do kit.
@@ -19,7 +19,9 @@ Consultoria de estilo para barbearias, em português, com análise facial real, 
 - Cobrança no caixa e integração opcional Mercado Pago Checkout Pro, com assinatura de webhook, consulta do pagamento no servidor e conferência do valor.
 - Docker Compose, Caddy/HTTPS, volume persistente, backup e workflow de testes.
 
-A jornada desta versão é **assistida pelo profissional**: entrar → criar atendimento → questionário/foto → análise → revisão → entrega → retorno. Cobrança fica no atendimento. O checkout público antes da captura, a assinatura automática das barbearias e o agendamento com lembretes não fazem parte desta versão; a mensalidade B2B pode ser administrada comercialmente fora do sistema.
+A jornada pública é **página da barbearia → pagamento → questionário/foto → análise → revisão profissional → relatório → retorno**. O profissional também pode iniciar a consulta pelo painel. Compartilhe a página disponível em Configurações. O cliente acompanha a consulta por link privado de 7 dias; fotos e rascunhos não aparecem no relatório público. Reenvio após falha pode ser liberado pelo barbeiro sem cobrar novamente.
+
+Assinatura automática B2B e agenda com lembretes não fazem parte desta versão; a mensalidade da barbearia é administrada comercialmente fora do sistema.
 
 ## Instalação
 

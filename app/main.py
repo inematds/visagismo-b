@@ -27,7 +27,7 @@ async def lifespan(app):
 app=FastAPI(title='Visagismo B',version=__version__,lifespan=lifespan)
 app.mount('/static',StaticFiles(directory=ROOT/'app/static'),name='static')
 templates=Jinja2Templates(directory=ROOT/'app/templates')
-STATUSES={'queued':'Na fila','processing':'Analisando foto','pending_review':'Aguardando revisão',
+STATUSES={'awaiting_payment':'Aguardando pagamento','awaiting_upload':'Aguardando foto','queued':'Na fila','processing':'Analisando foto','pending_review':'Aguardando revisão',
           'delivered':'Entregue','failed':'Precisa de nova foto'}
 templates.env.filters['datebr']=lambda x: datetime.fromtimestamp(x).strftime('%d/%m/%Y às %H:%M') if x else '—'
 templates.env.globals.update(statuses=STATUSES,version=__version__)
@@ -167,7 +167,7 @@ def approve(request:Request,cid:str,csrf_token:str=Form(...),notes:str=Form(...)
 @app.post('/atendimento/{cid}/pagamento')
 def pay(request:Request,cid:str,csrf_token:str=Form(...)):
     user=csrf(request,csrf_token);consultation(cid,user)
-    with db() as con: con.execute("UPDATE consultations SET paid=1,payment_method='caixa' WHERE id=?",(cid,))
+    with db() as con: con.execute("UPDATE consultations SET paid=1,payment_method='caixa',status=CASE WHEN status='awaiting_payment' THEN 'awaiting_upload' ELSE status END WHERE id=?",(cid,))
     return RedirectResponse('/atendimento/'+cid,status_code=303)
 
 @app.post('/atendimento/{cid}/excluir')
@@ -203,7 +203,7 @@ def public_report(request:Request,token:str):
 
 @app.get('/configuracoes',response_class=HTMLResponse)
 def settings(request:Request):
-    user=current(request);return render(request,'settings.html',user=user,brand=tenant(user))
+    user=current(request);return render(request,'settings.html',user=user,brand=tenant(user),store_url=str(request.base_url)+'b/'+user['tenant_id'])
 
 @app.post('/configuracoes')
 def save_settings(request:Request,csrf_token:str=Form(...),name:str=Form(...),professional:str=Form(...),city:str=Form(''),contact:str=Form(''),price_cents:int=Form(0)):
@@ -242,3 +242,15 @@ def webhook(request:Request):
         payments.reconcile(payment)
     except httpx.HTTPError: raise HTTPException(502,'Consulta de pagamento indisponível. Reenvie a notificação.')
     return {'received':True}
+
+from .public import router as public_router
+app.include_router(public_router)
+
+@app.post('/atendimento/{cid}/nova-foto')
+def request_new_photo(request:Request,cid:str,csrf_token:str=Form(...)):
+    user=csrf(request,csrf_token);row=consultation(cid,user)
+    if row['status']!='failed' or not row['access_hash']:raise HTTPException(409,'Este atendimento não permite reenvio público.')
+    with db() as con:
+        con.execute("UPDATE consultations SET status='awaiting_upload',error=NULL,attempts=0,updated=? WHERE id=? AND status='failed'",(time.time(),cid))
+        shutil.rmtree(DATA/cid,ignore_errors=True)
+    return RedirectResponse('/atendimento/'+cid,status_code=303)

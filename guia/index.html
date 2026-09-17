@@ -144,8 +144,8 @@
 <section id="fluxo"><div class="wrap">
   <span class="chip">Como funciona</span>
   <h2>Da primeira conversa ao próximo atendimento.</h2>
-  <p class="sub">Acesso profissional e atendimento assistido. Cobrança registrada no caixa ou por integração opcional com Mercado Pago.</p>
-  <div class="flow"><span>Preferências + foto</span><span class="arr">→</span><span>Análise</span><span class="arr">→</span><span>Revisão</span><span class="arr">→</span><span>Relatório</span><span class="arr">→</span><span>Retorno</span></div>
+  <p class="sub">O cliente começa na página pública da barbearia e envia a foto depois do pagamento. O profissional também pode iniciar o atendimento pelo painel.</p>
+  <div class="flow"><span>Página + pagamento</span><span class="arr">→</span><span>Preferências + foto</span><span class="arr">→</span><span>Análise</span><span class="arr">→</span><span>Revisão</span><span class="arr">→</span><span>Relatório</span><span class="arr">→</span><span>Retorno</span></div>
 </div></section>
 
 <section id="pre"><div class="wrap">
@@ -171,7 +171,7 @@ chmod 600 .env
 nano .env</pre></div></div><div class="step"><div class="b">3</div><div><h3>Suba a aplicação e o worker</h3><p>O Caddy cuida do HTTPS. Se já houver proxy na VPS, siga a adaptação descrita no VPS.md.</p><pre>docker compose config --quiet
 docker compose up -d --build</pre></div></div><div class="step"><div class="b">4</div><div><h3>Crie o acesso profissional</h3><p>A senha é solicitada sem aparecer no terminal. Troque os dados de exemplo pelos seus.</p><pre>docker compose exec app python -m app.manage create-user \
   --email voce@barbearia.com.br \
-  --barbearia &quot;Sua Barbearia&quot; --profissional &quot;Seu nome&quot;</pre></div></div><div class="step"><div class="b">5</div><div><h3>Atenda, revise e entregue</h3><p>Abra seu domínio, entre no painel e crie uma consulta. Registre a orientação final antes de liberar o relatório. Para acompanhar os serviços:</p><pre>docker compose ps
+  --barbearia &quot;Sua Barbearia&quot; --profissional &quot;Seu nome&quot;</pre></div></div><div class="step"><div class="b">5</div><div><h3>Atenda, revise e entregue</h3><p>Abra seu domínio e entre no painel. Em Configurações, copie a página pública para seus clientes. Registre a orientação final antes de liberar o relatório. Para acompanhar os serviços:</p><pre>docker compose ps
 docker compose logs --tail=50 worker</pre></div></div><div class="step"><div class="b">6</div><div><h3>Proteja os dados</h3><p>Faça backup em diretório privado e teste a restauração conforme VPS.md. Fotos expiram em 24 horas e relatórios em 90 dias por padrão.</p><pre>bash scripts/backup.sh /diretorio-protegido/visagismo-backups</pre></div></div></div></section>
 
 <section id="exemplos"><div class="wrap">
@@ -185,13 +185,13 @@ docker compose logs --tail=50 worker</pre></div></div><div class="step"><div cla
   <span class="chip">Roadmap</span>
   <h2>O que está disponível e o que vem depois.</h2>
   <p class="sub">Use o piloto para medir utilidade, tempo de atendimento e custo por consulta.</p>
-<div class="phase"><div class="tag">Disponível</div><div class="d"><strong>Consulta assistida completa</strong><span>Login, questionário, análise, fila, revisão, relatório, retorno, histórico e exclusão.</span></div></div><div class="phase"><div class="tag">Opcional</div><div class="d"><strong>Simulação e cobrança online</strong><span>Configure fal.ai para flux2-klein e Mercado Pago para consultas avulsas. O pagamento precisa de homologação sandbox na conta da instalação.</span></div></div><div class="phase"><div class="tag">Evolução</div><div class="d"><strong>Automação comercial</strong><span>Checkout público antes da captura, assinatura automática B2B, lembretes e agenda são próximos passos, não recursos desta versão.</span></div></div><p class="sub">Leia as instruções completas de <a href="https://github.com/inematds/visagismo-b/blob/main/VPS.md">instalação, privacidade, backup e operação na VPS</a>.</p>
+<div class="phase"><div class="tag">Disponível</div><div class="d"><strong>Consulta assistida completa</strong><span>Página pública, pagamento antes da captura, login, questionário, análise, revisão, relatório, retorno, histórico e exclusão.</span></div></div><div class="phase"><div class="tag">Opcional</div><div class="d"><strong>Simulação e cobrança online</strong><span>Configure fal.ai para flux2-klein e Mercado Pago para consultas avulsas. O pagamento precisa de homologação sandbox na conta da instalação.</span></div></div><div class="phase"><div class="tag">Evolução</div><div class="d"><strong>Automação comercial</strong><span>Assinatura automática B2B, lembretes e agenda são próximos passos, não recursos desta versão.</span></div></div><p class="sub">Leia as instruções completas de <a href="https://github.com/inematds/visagismo-b/blob/main/VPS.md">instalação, privacidade, backup e operação na VPS</a>.</p>
 </div></section>
 
 <footer>
   <div class="wrap">
     <div class="pill">FastAPI</div><div class="pill">MediaPipe</div><div class="pill">Docker + SQLite</div>
-    <p style="margin-top:18px">Visagismo B · v1.0.0 · Consulta assistida ·
+    <p style="margin-top:18px">Visagismo B · v1.1.0 · Consulta assistida ·
       <a href="https://github.com/inematds/visagismo-b">inematds/visagismo-b</a> ·
       <a href="https://inema.club">INEMA.CLUB</a></p>
   </div>

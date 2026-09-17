@@ -54,6 +54,6 @@ def reconcile(payment):
         if row['payment_id'] and row['payment_id']!=payment_id:return False
         state=payment.get('status')
         if state not in ['approved','refunded','charged_back']:return False
-        con.execute("UPDATE consultations SET paid=?,payment_method='mercadopago',payment_id=? WHERE id=?",
-                    (int(state=='approved'),payment_id,cid))
+        con.execute("UPDATE consultations SET paid=?,payment_method='mercadopago',payment_id=?,status=CASE WHEN status='awaiting_payment' AND ?='approved' THEN 'awaiting_upload' ELSE status END WHERE id=?",
+                    (int(state=='approved'),payment_id,state,cid))
     return True
