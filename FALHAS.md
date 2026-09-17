@@ -2,6 +2,7 @@
 
 | data | o que quebrou | menor correção | prompt ou infra |
 |---|---|---|---|
+| 2026-09-17 | Runner do GitHub também não tinha EGL para teste facial | Instalar dependências nativas antes do pytest no workflow | infra |
 | 2026-09-17 | Contêiner slim importava MediaPipe mas não executava a análise | Instalar libegl1, libgles2 e libgl1 e testar uma foto no contêiner | infra |
 | 2026-09-17 | Compose de validação procurava .env da produção inexistente | Permitir ENV_FILE para validar com .env.example | infra |
 | 2026-09-17 | Guia ultrapassava a largura do celular com comandos longos | Aplicar min-width:0 aos filhos de grid e limitar pre | prompt |
