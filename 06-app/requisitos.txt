@@ -1,0 +1,23 @@
+# Instalar en DOS pasos, no de una vez:
+#
+#   pip install --no-deps mediapipe==0.10.21
+#   pip install -r requisitos.txt
+#
+# mediapipe arrastra opencv-contrib-python, que colisiona con
+# opencv-python-headless (misma carpeta cv2/, gana el ultimo instalado),
+# ademas de jax, jaxlib, sentencepiece y sounddevice que no usamos.
+# matplotlib si es necesaria: mediapipe la importa al cargarse.
+numpy<2
+opencv-python-headless==4.10.0.84
+matplotlib
+absl-py
+attrs>=19.1.0
+flatbuffers>=2.0
+protobuf<5,>=4.25.3
+fastapi
+uvicorn[standard]
+python-multipart
+jinja2
+fal-client
+# Los iPhone suben HEIC y OpenCV no lo lee.
+pillow-heif

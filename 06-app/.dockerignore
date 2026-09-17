@@ -1,0 +1,4 @@
+sesiones/
+venv/
+__pycache__/
+*.pyc

@@ -1,0 +1,9 @@
+.git
+.env
+.env.*
+.venv
+data
+artifacts
+04-mockup
+node_modules
+__pycache__

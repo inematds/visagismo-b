@@ -1,0 +1,555 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tu análisis · Barbería Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap">
+
+<style>
+/* Colores de barberia: rojo y azul de poste sobre papel hueso. */
+:root{
+  --fondo:#F4F1EC; --fondo-2:#FFFFFF; --fondo-3:#E9E4DB;
+  --borde:#D6CFC2; --borde-f:#B8AE9C;
+  --tinta:#14181F; --tinta-2:#4A5361; --tinta-3:#7C8697;
+  --rojo:#C2102E; --rojo-osc:#8E0B21;
+  --azul:#16386B; --azul-med:#2E6CB8; --azul-claro:#5AA9E6;
+  --laton:var(--rojo); --laton-c:var(--rojo-osc); --acero:var(--azul-med);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--fondo);color:var(--tinta);
+  font-family:"Archivo",system-ui,-apple-system,sans-serif;
+  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
+}
+.env{max-width:640px;margin:0 auto;padding:0 20px 90px}
+h1,h2{font-family:"Bricolage Grotesque","Archivo",sans-serif;font-weight:700;margin:0;text-wrap:balance}
+
+.top{display:flex;gap:14px;align-items:center;padding:18px 0 16px;border-bottom:1px solid var(--borde)}
+.poste{
+  width:11px;height:44px;border-radius:6px;flex:none;position:relative;overflow:hidden;
+  background:repeating-linear-gradient(155deg,
+    var(--rojo) 0 6px,#fff 6px 12px,var(--azul) 12px 18px,#fff 18px 24px);
+  background-size:100% 24px;
+  box-shadow:inset 0 0 0 1px rgba(20,24,31,.22),0 1px 3px rgba(20,24,31,.2);
+  animation:girar 2.6s linear infinite;
+}
+.poste::after{content:"";position:absolute;inset:0;border-radius:6px;
+  background:linear-gradient(90deg,rgba(0,0,0,.30),rgba(255,255,255,.42) 42%,rgba(0,0,0,.24))}
+@keyframes girar{to{background-position:0 -24px}}
+.top-n{font-family:"Bricolage Grotesque","Archivo",sans-serif;font-size:20px;font-weight:800;letter-spacing:.11em;line-height:1}
+.top-s{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--tinta-3);margin-top:4px}
+
+.hero{padding:30px 0 24px}
+.eyebrow{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--rojo);font-weight:700;margin-bottom:13px}
+.hero h1{font-size:clamp(28px,7.4vw,42px);line-height:1.06;letter-spacing:-.015em}
+.hero p{margin:16px 0 0;color:var(--tinta-2);font-size:15.5px}
+
+.paso{margin:34px 0 0;padding-top:26px;border-top:1px solid var(--borde)}
+.paso:first-of-type{border-top:none;padding-top:0}
+.paso-n{font-family:"JetBrains Mono",monospace;font-size:11px;font-weight:700;color:var(--rojo);letter-spacing:.05em}
+.paso h2{font-size:21px;margin:6px 0 4px}
+.paso .ayuda{font-size:13.5px;color:var(--tinta-3);margin:0 0 18px}
+
+label.campo{display:block;margin-bottom:20px}
+.etq{display:block;font-size:13px;font-weight:600;margin-bottom:7px}
+.etq span{font-weight:400;color:var(--tinta-3)}
+input[type=text],textarea,select{
+  width:100%;min-height:48px;padding:12px 14px;border-radius:6px;
+  border:1px solid var(--borde-f);background:#fff;color:var(--tinta);
+  font-family:inherit;font-size:16px;line-height:1.4;
+}
+textarea{min-height:82px;resize:vertical}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--azul-med);outline-offset:1px;border-color:var(--azul-med)}
+::placeholder{color:var(--tinta-3)}
+
+/* Opciones tipo chip: checkbox y radio nativos, sin JavaScript. */
+.ops{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:4px}
+.ops input{position:absolute;opacity:0;width:0;height:0}
+.ops label{
+  display:inline-flex;align-items:center;min-height:44px;padding:0 15px;
+  border:1px solid var(--borde-f);border-radius:999px;background:#fff;
+  font-size:13.5px;color:var(--tinta-2);cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  transition:color .16s,border-color .16s,background .16s,transform .09s;
+}
+.ops label:active{transform:scale(.95)}
+.ops input:checked + label{
+  color:#fff;background:var(--azul);border-color:var(--azul);font-weight:600;
+  box-shadow:0 2px 8px -3px rgba(22,56,107,.5);
+}
+.ops input:focus-visible + label{outline:2px solid var(--acero);outline-offset:2px}
+
+/* Subida de foto */
+.foto{
+  display:block;border:1.5px dashed var(--borde-f);border-radius:6px;
+  padding:26px 20px;text-align:center;background:#fff;cursor:pointer;
+  transition:border-color .16s,background .16s;
+}
+.foto:hover,.foto:focus-within{border-color:var(--azul-med);background:#fff;box-shadow:0 4px 14px -8px rgba(22,56,107,.4)}
+.foto input{width:100%;margin-top:14px;color:var(--tinta-2);font-size:13px}
+.foto b{display:block;font-size:15px;margin-bottom:5px}
+.foto small{color:var(--tinta-3);font-size:12.5px;line-height:1.5;display:block}
+
+.peso{margin:10px 0 0;font-size:12.5px;color:var(--tinta-3);text-align:center}
+.peso b{color:var(--azul)}
+.peso.alerta{color:var(--rojo);text-align:left;line-height:1.5}
+.peso.alerta b{color:var(--rojo)}
+.consejos{margin:16px 0 0;padding:15px 17px;background:#fff;border:1px solid var(--borde);border-radius:4px}
+.consejos b{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--rojo);display:block;margin-bottom:9px}
+.consejos ul{margin:0;padding-left:17px;font-size:13.5px;color:var(--tinta-2);line-height:1.75}
+
+.enviar{
+  width:100%;min-height:56px;margin-top:34px;border:none;border-radius:999px;
+  background:var(--rojo);color:#fff;font-family:inherit;
+  font-size:16px;font-weight:700;letter-spacing:.03em;cursor:pointer;
+  transition:background .18s,transform .09s;
+}
+.enviar:hover{background:var(--rojo-osc)}
+.enviar:active{transform:scale(.985)}
+.enviar:focus-visible{outline:3px solid var(--azul);outline-offset:3px}
+.nota-envio{text-align:center;font-size:12.5px;color:var(--tinta-3);margin-top:13px}
+
+.privacidad{
+  margin-top:36px;padding:16px 18px;border:1px solid var(--borde);border-radius:4px;
+  font-size:12.5px;color:var(--tinta-3);line-height:1.65;
+}
+.privacidad b{color:var(--azul);display:block;margin-bottom:5px}
+
+@keyframes entrar{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+#espera[hidden]{display:none}   /* gana al display:flex de abajo por especificidad */
+#espera{position:fixed;inset:0;z-index:99;background:var(--fondo);overflow-y:auto;
+  padding:34px 20px 60px;display:flex;justify-content:center}
+.esp-caja{width:100%;max-width:520px;display:flex;flex-direction:column;align-items:center;text-align:center}
+.poste-xl{width:56px;height:190px;flex:none;border-radius:28px;position:relative;overflow:hidden;
+  background:repeating-linear-gradient(158deg,var(--rojo) 0 20px,#fff 20px 40px,
+    var(--azul) 40px 60px,#fff 60px 80px);background-size:100% 80px;
+  box-shadow:inset 0 0 0 2px rgba(20,24,31,.18),0 18px 40px -18px rgba(20,24,31,.5);
+  animation:girar-xl 3.4s linear infinite}
+.poste-xl::after{content:"";position:absolute;inset:0;border-radius:28px;
+  background:linear-gradient(90deg,rgba(0,0,0,.34),rgba(255,255,255,.5) 38%,
+    rgba(255,255,255,.14) 56%,rgba(0,0,0,.30))}
+@keyframes girar-xl{to{background-position:0 -80px}}
+.remate{width:76px;height:15px;border-radius:5px;flex:none;
+  background:linear-gradient(180deg,#E9E6DF,#A9A296 55%,#CFC9BE);
+  box-shadow:0 2px 5px rgba(20,24,31,.28)}
+.remate.arriba{margin-bottom:-4px;z-index:2;position:relative}
+.remate.abajo{margin-top:-4px;z-index:2;position:relative}
+#esp-titulo{font-size:clamp(24px,6.2vw,32px);margin-top:28px}
+.esp-paso{display:flex;align-items:center;gap:10px;justify-content:center;
+  margin:12px 0 0;font-size:14px;color:var(--tinta-2)}
+.puntos{display:inline-flex;gap:4px}
+.puntos i{width:6px;height:6px;border-radius:50%;background:var(--azul-med);
+  animation:latir 1.25s ease-in-out infinite}
+.puntos i:nth-child(2){animation-delay:.18s}
+.puntos i:nth-child(3){animation-delay:.36s}
+@keyframes latir{0%,60%,100%{opacity:.22;transform:translateY(0)}30%{opacity:1;transform:translateY(-3px)}}
+.barra{margin:20px auto 0;width:100%;max-width:340px;height:5px;border-radius:3px;
+  background:var(--fondo-3);overflow:hidden;box-shadow:inset 0 0 0 1px var(--borde)}
+.barra i{display:block;height:100%;width:38%;border-radius:3px;
+  background:linear-gradient(90deg,var(--azul),var(--rojo));
+  animation:recorrer 1.9s cubic-bezier(.5,0,.5,1) infinite}
+@keyframes recorrer{0%{transform:translateX(-100%)}100%{transform:translateX(365%)}}
+.dato{margin-top:34px;width:100%;background:#fff;border:1px solid var(--borde);
+  border-left:4px solid var(--rojo);border-radius:8px;padding:19px 21px;text-align:left;
+  box-shadow:0 10px 26px -20px rgba(20,24,31,.5)}
+.dato-cat{font-size:10px;letter-spacing:.19em;text-transform:uppercase;color:var(--rojo);
+  font-weight:700;margin-bottom:8px}
+.dato p{margin:0;font-size:16px;line-height:1.55}
+.real{margin-top:26px;width:100%;background:var(--fondo-3);border:1px solid var(--borde);
+  border-radius:8px;padding:19px 21px;text-align:left}
+.real h3{font-size:15px;font-weight:700;margin:0 0 9px;font-family:inherit}
+.real p{margin:0 0 10px;font-size:13.5px;color:var(--tinta-2);line-height:1.6}
+.real p:last-child{margin-bottom:0}
+.real b{color:var(--tinta)}
+@media (prefers-reduced-motion:reduce){
+  .poste-xl,.puntos i,.barra i{animation:none!important}
+  .barra i{width:100%}
+}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important}.poste{animation:none!important}}
+</style>
+
+<div class="env">
+
+  <header class="top">
+    <div class="poste" aria-hidden="true"></div>
+
+    <div>
+      <div class="top-n">BARBERÍA DEMO</div>
+      <div class="top-s">Barbería · Tu Ciudad</div>
+    </div>
+  </header>
+
+  <div class="hero">
+    <div class="eyebrow">Paso 2 de 2</div>
+    <h1>Cuéntanos qué buscas y súbenos una foto.</h1>
+    <p>
+      Son dos minutos. La foto es lo que medimos; las respuestas son lo que la medición
+      no puede saber por sí sola.
+    </p>
+  </div>
+
+  <form method="post" action="/generar" enctype="multipart/form-data">
+
+    <div class="paso">
+      <div class="paso-n">01</div>
+      <h2>Quién eres</h2>
+      <p class="ayuda">Solo para encabezar tu informe.</p>
+      <label class="campo">
+        <span class="etq">Nombre y apellido</span>
+        <input type="text" name="nombre" required autocomplete="name" placeholder="Ángel Aparicio">
+      </label>
+    </div>
+
+    <div class="paso">
+      <div class="paso-n">02</div>
+      <h2>Qué quieres transmitir</h2>
+      <p class="ayuda">Elige las que encajen. El mejor corte no es el que queda «bien»: es el que dice lo que quieres decir.</p>
+      <div class="ops">
+        <input type="checkbox" id="t1" name="transmitir" value="masculino"><label for="t1">Masculinidad</label>
+        <input type="checkbox" id="t2" name="transmitir" value="elegante"><label for="t2">Elegancia</label>
+        <input type="checkbox" id="t3" name="transmitir" value="profesional"><label for="t3">Credibilidad</label>
+        <input type="checkbox" id="t4" name="transmitir" value="dominante"><label for="t4">Presencia</label>
+        <input type="checkbox" id="t5" name="transmitir" value="juvenil"><label for="t5">Frescura</label>
+        <input type="checkbox" id="t6" name="transmitir" value="relajado"><label for="t6">Naturalidad</label>
+        <input type="checkbox" id="t7" name="transmitir" value="moderno"><label for="t7">Actualidad</label>
+        <input type="checkbox" id="t8" name="transmitir" value="sofisticado"><label for="t8">Sofisticación</label>
+      </div>
+    </div>
+
+    <div class="paso">
+      <div class="paso-n">03</div>
+      <h2>Estilos que te tiran</h2>
+      <p class="ayuda">Si no conoces alguno, déjalo. Sirve para calibrar el acabado, no para copiarlo.</p>
+      <div class="ops">
+        <input type="checkbox" id="e1" name="estilos" value="old_money"><label for="e1">Old money</label>
+        <input type="checkbox" id="e2" name="estilos" value="clean_boy"><label for="e2">Clean boy</label>
+        <input type="checkbox" id="e3" name="estilos" value="clasico"><label for="e3">Clásico</label>
+        <input type="checkbox" id="e4" name="estilos" value="ejecutivo"><label for="e4">Ejecutivo</label>
+        <input type="checkbox" id="e5" name="estilos" value="streetwear"><label for="e5">Streetwear</label>
+        <input type="checkbox" id="e6" name="estilos" value="natural"><label for="e6">Sin estilo marcado</label>
+      </div>
+    </div>
+
+    <div class="paso">
+      <div class="paso-n">04</div>
+      <h2>Tu realidad de cada mañana</h2>
+      <p class="ayuda">Esto cambia la propuesta de verdad: un corte que necesita diez minutos no sirve si tienes dos.</p>
+
+      <div class="etq">¿Cuánto tiempo le dedicas al pelo por la mañana?</div>
+      <div class="ops" style="margin-bottom:20px">
+        <input type="radio" id="m1" name="minutos" value="2"><label for="m1">Menos de 2 min</label>
+        <input type="radio" id="m2" name="minutos" value="5" checked><label for="m2">5 min</label>
+        <input type="radio" id="m3" name="minutos" value="10"><label for="m3">10 min</label>
+        <input type="radio" id="m4" name="minutos" value="15"><label for="m4">Lo que haga falta</label>
+      </div>
+
+      <div class="etq">¿Tienes barba?</div>
+      <div class="ops" style="margin-bottom:20px">
+        <input type="radio" id="b1" name="barba" value="si" checked><label for="b1">Sí</label>
+        <input type="radio" id="b2" name="barba" value="poca"><label for="b2">Me crece poco</label>
+        <input type="radio" id="b3" name="barba" value="no"><label for="b3">No llevo</label>
+      </div>
+
+      <div class="etq">¿Cómo definirías tu cuello? <span>— determina hasta dónde se rapa la nuca</span></div>
+      <div class="ops">
+        <input type="radio" id="c1" name="cuello" value="largo" checked><label for="c1">Largo y estrecho</label>
+        <input type="radio" id="c2" name="cuello" value="corto"><label for="c2">Corto y ancho</label>
+      </div>
+    </div>
+
+    <div class="paso">
+      <div class="paso-n">05</div>
+      <h2>Sé sincero</h2>
+      <p class="ayuda">¿Qué es lo que menos te gusta de tu cara? No vamos a esconderlo: vamos a repartir la atención.</p>
+      <label class="campo">
+        <span class="etq">Tu zona menos favorita <span>— opcional</span></span>
+        <textarea name="menos_favorita" placeholder="La nariz de perfil, las orejas, la frente..."></textarea>
+      </label>
+    </div>
+
+    <div class="paso">
+      <div class="paso-n">06</div>
+      <h2>Tu foto</h2>
+      <p class="ayuda">Es lo que medimos. De su calidad depende la precisión de todo el informe.</p>
+
+      <label class="foto">
+        <b>Foto de frente</b>
+        <small>Mirando a cámara, expresión neutra, sin gafas ni gorra.<br>Cualquier formato, también el del iPhone.</small>
+        <input type="file" name="frontal" accept="image/*" required>
+      </label>
+
+      <label class="foto" style="margin-top:14px">
+        <b>Foto de perfil <span style="color:var(--tinta-3);font-weight:400">— opcional</span></b>
+        <small>De lado, mirando al frente. Sirve para ver cómo te quedaría el corte
+        de perfil.<br>No se mide sobre ella: solo se usa para la simulación.</small>
+        <input type="file" name="perfil" accept="image/*">
+      </label>
+
+      <p class="peso" id="peso" hidden></p>
+
+      <div class="consejos">
+        <b>Para que salga bien</b>
+        <ul>
+          <li>Luz de frente, nunca a contraluz ni con una ventana detrás.</li>
+          <li>La cara recta: sin girarla ni inclinarla, o las medidas se deforman.</li>
+          <li>Retira el pelo de la frente si puedes.</li>
+          <li>Vale un selfie, pero con el brazo estirado y el móvil a la altura de los ojos.</li>
+        </ul>
+      </div>
+    </div>
+
+    <button class="enviar" type="submit">Generar mi análisis</button>
+    <p class="nota-envio">Tarda unos segundos. No cierres la página.</p>
+
+    <div class="privacidad">
+      <b>Qué hacemos con tu foto</b>
+      Medimos la forma de tu rostro para calcular sus proporciones. El sistema
+      <strong>no te identifica</strong> ni guarda ningún patrón que permita reconocerte.
+      Tu foto y tus medidas se borran automáticamente a los 90 días, no entrenan ningún
+      sistema y no se publican en ningún sitio salvo que lo autorices aparte y por escrito.
+    </div>
+
+  </form>
+
+<div id="espera" hidden>
+  <div class="esp-caja">
+    <div class="remate arriba" aria-hidden="true"></div>
+    <div class="poste-xl" aria-hidden="true"></div>
+    <div class="remate abajo" aria-hidden="true"></div>
+    <h2 id="esp-titulo">Estamos midiendo tu cara</h2>
+    <p class="esp-paso"><span id="esp-paso">Subiendo tus fotos</span>
+      <span class="puntos" aria-hidden="true"><i></i><i></i><i></i></span></p>
+    <div class="barra" aria-hidden="true"><i></i></div>
+    <div class="dato">
+      <div class="dato-cat" id="dato-cat"></div>
+      <p id="dato-txt"></p>
+    </div>
+    <div class="real">
+      <h3>Cómo funciona esto de verdad</h3>
+      <p>Lo que estás viendo es una <b>demostración</b>: el informe se genera al momento
+        para que veas cómo queda.</p>
+      <p>En una barbería de verdad, Toni recibe tu análisis, <b>lo revisa cara a cara con
+        tus fotos</b>, ajusta lo que no comparte y lo firma. Después te llega por WhatsApp,
+        normalmente <b>en dos o tres días</b>.</p>
+      <p>La máquina mide y redacta. La persona decide y firma.</p>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+/* Unico JavaScript de la demo. Motivo: la plataforma corta cualquier peticion
+   de mas de 4,5 MB y una foto de movil pesa entre 3 y 8 MB.
+
+   Lo importante es que el ENVIO ESPERA a que las fotos esten reducidas. La
+   version anterior reducia al elegir el archivo, y si el usuario pulsaba
+   enviar antes de que terminase viajaba el original -> error 413. */
+function arrancar() {
+  var LADO_MAX = 1280;
+  var CALIDAD = 0.82;
+  var TOPE = 1.5 * 1024 * 1024;   // POR FOTO: dos fotos = 3 MB, bajo el limite de 4,5
+
+  var form = document.querySelector('form');
+  var boton = document.querySelector('.enviar');
+  var aviso = document.getElementById('peso');
+  var campos = [].slice.call(document.querySelectorAll('input[type=file]'));
+  var trabajando = 0;
+  var problemas = {};
+  var textoBoton = boton ? boton.textContent : '';
+
+  function mb(n) { return (n / 1048576).toFixed(1).replace('.', ',') + ' MB'; }
+
+  function pintar() {
+    if (!aviso) return;
+    var total = campos.reduce(function (a, c) {
+      return a + (c.files[0] ? c.files[0].size : 0);
+    }, 0);
+    if (trabajando > 0) {
+      aviso.hidden = false;
+      aviso.innerHTML = 'Preparando las fotos…';
+      if (boton) { boton.disabled = true; boton.textContent = 'Preparando fotos…'; }
+      return;
+    }
+    if (boton) { boton.disabled = false; boton.textContent = textoBoton; }
+    var pendientes = Object.keys(problemas);
+    if (pendientes.length) {
+      aviso.hidden = false;
+      aviso.className = 'peso alerta';
+      aviso.innerHTML = 'Tu navegador no puede preparar esta foto y pesa demasiado. ' +
+        'Prueba a hacerle una captura de pantalla y subir esa, o cambia el formato ' +
+        'del móvil: <b>Ajustes → Cámara → Formatos → Más compatible</b>.';
+      return;
+    }
+    if (!total) { aviso.hidden = true; return; }
+    aviso.hidden = false;
+    aviso.className = 'peso';
+    aviso.innerHTML = 'Listo para enviar: <b>' + mb(total) + '</b>';
+  }
+
+  /* Reduce hasta bajar del tope, apretando la calidad si hace falta. */
+  /* Decodifica con createImageBitmap, que en Safari (iPhone) tambien abre
+     HEIC. Si el navegador no puede con el formato, devuelve null y quien
+     llama avisa: mejor decirlo que dejar que la subida falle despues. */
+  function decodificar(archivo) {
+    if (self.createImageBitmap) {
+      return createImageBitmap(archivo).catch(function () { return porEtiqueta(archivo); });
+    }
+    return porEtiqueta(archivo);
+  }
+
+  function porEtiqueta(archivo) {
+    return new Promise(function (ok) {
+      var url = URL.createObjectURL(archivo);
+      var img = new Image();
+      img.onload = function () { URL.revokeObjectURL(url); ok(img); };
+      img.onerror = function () { URL.revokeObjectURL(url); ok(null); };
+      img.src = url;
+    });
+  }
+
+  function reducir(archivo, lado, calidad) {
+    return decodificar(archivo).then(function (fuente) {
+      if (!fuente) return null;                       // formato no soportado
+      var ancho = fuente.width, alto = fuente.height;
+      var escala = Math.min(1, lado / Math.max(ancho, alto));
+      var lienzo = document.createElement('canvas');
+      lienzo.width = Math.round(ancho * escala);
+      lienzo.height = Math.round(alto * escala);
+      lienzo.getContext('2d').drawImage(fuente, 0, 0, lienzo.width, lienzo.height);
+      if (fuente.close) fuente.close();
+      return new Promise(function (ok) {
+        lienzo.toBlob(function (blob) {
+          if (!blob) return ok(null);
+          var nuevo = new File([blob], archivo.name.replace(/\.[^.]+$/, '') + '.jpg',
+                               { type: 'image/jpeg' });
+          if (nuevo.size > TOPE && calidad > 0.5) {
+            return ok(reducir(nuevo, lado * 0.8, calidad - 0.12));
+          }
+          ok(nuevo);
+        }, 'image/jpeg', calidad);
+      });
+    });
+  }
+
+  function procesar(campo) {
+    var original = campo.files[0];
+    if (!original || !/^image\//.test(original.type)) { pintar(); return Promise.resolve(); }
+    trabajando++; pintar();
+    return Promise.resolve(reducir(original, LADO_MAX, CALIDAD)).then(function (r) {
+      if (r && r.size < original.size) {
+        var dt = new DataTransfer(); dt.items.add(r); campo.files = dt.files;
+      } else if (!r && original.size > TOPE) {
+        problemas[campo.name] = original.name;
+      }
+      trabajando--; pintar();
+    }).catch(function () { trabajando--; pintar(); });
+  }
+
+  campos.forEach(function (campo) {
+    campo.addEventListener('change', function () { delete problemas[campo.name]; procesar(campo); });
+  });
+
+  /* El envio va por fetch, no por navegacion normal, y hay un motivo: al
+     enviar un formulario de la forma clasica el navegador CONGELA la pagina
+     que abandona y deja de repintarla, asi que la pantalla de espera se
+     activaba pero no llegaba a verse nunca. Controlando el envio se puede
+     mostrar durante todo el proceso y luego pintar el informe.
+
+     Sin fetch o FormData se deja el envio normal: se pierde la animacion,
+     pero el informe llega igual. */
+  function enviar() {
+    if (!form) return;
+    if (!window.fetch || !window.FormData) { form.submit(); return; }
+    arrancarEspera();
+    fetch(form.getAttribute('action') || '/generar', {
+      method: 'POST',
+      body: new FormData(form)
+    }).then(function (r) {
+      return r.text().then(function (html) { return { html: html, ok: r.ok }; });
+    }).then(function (res) {
+      /* El informe no lleva JavaScript, asi que reescribir el documento es
+         seguro y conserva sus estilos. La URL solo cambia si de verdad hay
+         informe: en un error se queda en el formulario, que es donde el
+         boton 'Volver a intentarlo' tiene sentido. */
+      if (res.ok) { try { history.replaceState(null, '', '/informe'); } catch (err) {} }
+      var html = res.html;
+      document.open();
+      document.write(html);
+      document.close();
+    }).catch(function () {
+      var t = document.getElementById('esp-titulo');
+      var pa = document.getElementById('esp-paso');
+      var b = document.querySelector('.barra');
+      if (t) t.textContent = 'Se ha cortado la conexión';
+      if (pa) pa.textContent = 'Vuelve a intentarlo en un momento';
+      if (b) b.style.display = 'none';
+    });
+  }
+
+  if (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (trabajando > 0) {          /* aun reduciendo fotos: se espera */
+        arrancarEspera();
+        var esperar = setInterval(function () {
+          if (trabajando === 0) { clearInterval(esperar); enviar(); }
+        }, 200);
+        return;
+      }
+      enviar();
+    });
+  }
+}
+
+/* La espera se muestra AQUI, en el navegador, mientras la peticion viaja.
+   El servidor ya no guarda sesiones ni hay refrescos que consultar: ese
+   patron se rompia en cuanto la plataforma levantaba una segunda instancia. */
+function arrancarEspera() {
+  var DATOS = /*CURIOSIDADES*/[];
+  var PASOS = [
+    'Subiendo tus fotos',
+    'Localizando los 468 puntos de tu rostro',
+    'Midiendo proporciones y comparando con el canon',
+    'Cruzando las medidas con tus respuestas',
+    'Redactando el diagnóstico',
+    'Generando tu simulación',
+    'Verificando que la simulación te respeta la cara',
+    'Montando el informe'
+  ];
+  var caja = document.getElementById('espera');
+  if (!caja) return;
+  caja.hidden = false;
+  document.body.style.overflow = 'hidden';
+
+  var i = Math.floor(Math.random() * (DATOS.length || 1));
+  var elCat = document.getElementById('dato-cat');
+  var elTxt = document.getElementById('dato-txt');
+  function pintarDato() {
+    if (!DATOS.length) return;
+    var d = DATOS[i % DATOS.length];
+    elCat.textContent = d.c;
+    elTxt.textContent = d.t;
+    var tarjeta = elTxt.parentElement;
+    tarjeta.style.animation = 'none';
+    void tarjeta.offsetWidth;
+    tarjeta.style.animation = 'entrar .5s ease';
+    i += 7;                      /* salto primo: no repite y cambia de tema */
+  }
+  pintarDato();
+  setInterval(pintarDato, 6500);
+
+  var p = 0, elPaso = document.getElementById('esp-paso');
+  setInterval(function () {
+    if (p < PASOS.length - 1) { p++; elPaso.textContent = PASOS[p]; }
+  }, 7000);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', arrancar);
+} else {
+  arrancar();
+}
+</script>

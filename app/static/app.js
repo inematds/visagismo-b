@@ -1,0 +1,7 @@
+'use strict';
+document.querySelectorAll('form[data-submit]').forEach(form=>form.addEventListener('submit',()=>{const b=form.querySelector('button[type=submit]');if(b){b.disabled=true;b.textContent='Enviando…';}}));
+document.querySelectorAll('[data-print]').forEach(b=>b.addEventListener('click',()=>window.print()));
+const photo=document.querySelector('#photo');
+if(photo){let last;photo.addEventListener('change',()=>{const f=photo.files[0],p=document.querySelector('#preview');if(last)URL.revokeObjectURL(last);if(!f)return;if(f.size>12*1024*1024){photo.setCustomValidity('A foto deve ter no máximo 12 MB.');photo.reportValidity();return;}photo.setCustomValidity('');if(/image\/(jpeg|png|webp)/.test(f.type)){last=URL.createObjectURL(f);p.src=last;p.classList.remove('hidden');}});}
+const waiting=document.querySelector('[data-status-url]');
+if(waiting){let errors=0;const poll=async()=>{try{const r=await fetch(waiting.dataset.statusUrl);if(!r.ok||r.redirected)throw Error();const j=await r.json();errors=0;if(!['queued','processing'].includes(j.status)){location.reload();return;}waiting.textContent=j.status==='queued'?'Seu atendimento está na fila. Você pode voltar ao painel.':'Analisando as proporções e preparando as sugestões…';setTimeout(poll,3000);}catch(e){errors++;waiting.textContent='Conexão interrompida. Tentaremos novamente; o atendimento está salvo.';if(errors<10)setTimeout(poll,6000);}};setTimeout(poll,2000);}

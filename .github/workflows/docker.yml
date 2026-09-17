@@ -1,0 +1,21 @@
+name: Testar aplicação VPS
+on:
+  push:
+    branches: [main]
+    paths: ['app/**', '03-motor/**', 'tests/**', '*requirements*.txt', 'Dockerfile', 'compose.yaml', '.github/workflows/docker.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install --no-deps -r requirements.txt
+      - run: pip install -r requirements-dev.txt
+      - run: python -m pytest -q tests
+      - run: docker build -t visagismo-b:1.0.0 .
+      - run: docker run --rm --read-only --tmpfs /tmp --tmpfs /data:uid=10001,gid=10001 -v "$PWD/scripts/container_smoke.py:/app/container_smoke.py:ro" visagismo-b:1.0.0 python container_smoke.py

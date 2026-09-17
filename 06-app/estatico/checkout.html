@@ -1,0 +1,333 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pago (demo) — Barbería Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap">
+
+<style>
+:root{
+  --papel:#F4F1EC; --papel-2:#FFFFFF; --papel-3:#E9E4DB;
+  --linea:#D6CFC2; --linea-f:#B8AE9C;
+  --tinta:#14181F; --tinta-2:#4A5361; --tinta-3:#7C8697;
+  --rojo:#C2102E; --rojo-osc:#8E0B21; --rojo-claro:#E63946;
+  --azul:#16386B; --azul-med:#2E6CB8; --azul-claro:#5AA9E6;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--papel);color:var(--tinta);
+  font-family:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+.env{max-width:1040px;margin:0 auto;padding:0 20px 64px}
+h1,h2,h3{font-family:"Bricolage Grotesque",system-ui,sans-serif;text-wrap:balance;margin:0;font-weight:800;letter-spacing:-.01em}
+.mono{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums}
+strong{font-weight:700;color:var(--tinta)}
+p{margin:0 0 12px}
+
+/* ── Poste de barbero (giratorio, CSS puro) ── */
+.poste{display:flex;flex-direction:column;align-items:center;flex:none}
+.poste-tapa{width:100%;border-radius:3px;flex:none;position:relative;z-index:2;
+  background:linear-gradient(180deg,#F3F3F0 0%,#C7C4BC 46%,#8E8B82 100%);
+  box-shadow:0 1px 2px rgba(20,24,31,.28);}
+.poste-cil{flex:1;width:100%;position:relative;overflow:hidden;margin:-1px 0;border-radius:2px;
+  box-shadow:inset 0 0 0 1px rgba(20,24,31,.1);
+  background-image:repeating-linear-gradient(45deg,var(--rojo) 0 12px,#fff 12px 24px,var(--azul) 24px 36px,#fff 36px 48px);
+  background-size:100% 48px;
+  animation:girar .95s linear infinite;
+}
+.poste-cil::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(90deg,rgba(255,255,255,.65) 0%,transparent 28%,transparent 64%,rgba(0,0,0,.2) 100%);}
+@keyframes girar{from{background-position:0 0}to{background-position:0 48px}}
+.poste--sm{width:11px;height:36px}
+.poste--sm .poste-tapa{height:4px}
+@media (prefers-reduced-motion:reduce){.poste-cil{animation:none}}
+
+/* ── Entrada escalonada (solo cabecera/hero) ── */
+@keyframes entra{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.entra{opacity:0;animation:entra .55s cubic-bezier(.2,.8,.2,1) forwards}
+.entra-1{animation-delay:.02s}
+.entra-2{animation-delay:.12s}
+.entra-3{animation-delay:.22s}
+@media (prefers-reduced-motion:reduce){.entra{opacity:1;animation:none;transform:none}}
+
+/* ── Banner DEMO — primero, visible sin scroll ── */
+.demo{
+  position:sticky;top:0;z-index:40;display:flex;gap:12px;align-items:flex-start;
+  margin:0 -20px;padding:13px 20px;background:var(--papel-3);border-bottom:2px solid var(--rojo);
+}
+.demo-tag{
+  flex:none;font-family:"JetBrains Mono",monospace;font-size:10.5px;font-weight:700;letter-spacing:.1em;
+  color:#fff;background:var(--rojo);padding:5px 9px;border-radius:3px;margin-top:1px;
+}
+.demo p{margin:0;font-size:12.8px;color:var(--tinta-2);line-height:1.5}
+.demo p strong{color:var(--tinta)}
+
+/* ── Cabecera ── */
+.top{display:flex;gap:13px;align-items:center;padding:16px 0 15px;border-bottom:1px solid var(--linea)}
+.top-n{font-size:19px;font-weight:800;letter-spacing:.03em;line-height:1}
+.top-s{font-size:10px;letter-spacing:.17em;text-transform:uppercase;color:var(--tinta-3);margin-top:4px;font-weight:600}
+.top-m{margin-left:auto;text-align:right;font-size:10.5px;color:var(--tinta-3);letter-spacing:.03em;line-height:1.7}
+.top-m b{color:var(--rojo-osc);font-weight:700}
+
+.hero{padding:22px 0 4px}
+.eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:10.5px;letter-spacing:.19em;text-transform:uppercase;color:var(--rojo-osc);font-weight:700;margin-bottom:12px}
+.eyebrow::before{content:"";width:14px;height:2px;background:var(--rojo);border-radius:2px}
+.hero h1{font-size:clamp(24px,6vw,34px);line-height:1.1}
+.hero p{margin:14px 0 0;font-size:14.5px;color:var(--tinta-2);max-width:56ch}
+
+/* ── Layout: resumen en columna lateral en escritorio ── */
+.pago{position:relative;margin-top:30px}
+@media (min-width:900px){
+  .pago{display:grid;grid-template-columns:1fr 340px;gap:40px;align-items:start}
+  .col-principal{grid-column:1;grid-row:1}
+  .col-resumen{grid-column:2;grid-row:1;position:sticky;top:16px}
+}
+.col-principal{display:flex;flex-direction:column;gap:36px}
+.col-resumen{margin-bottom:32px}
+
+/* ── Resumen del pedido ── */
+.resumen{background:var(--papel-2);border:1px solid var(--linea-f);border-radius:10px;overflow:hidden;position:relative}
+.resumen::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--rojo),var(--azul))}
+.resumen-top{background:var(--papel-3);padding:14px 18px;border-bottom:1px solid var(--linea-f)}
+.resumen-top b{font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--rojo-osc);font-weight:700}
+.resumen-body{padding:16px 18px}
+.resumen-linea{display:flex;justify-content:space-between;gap:14px;font-size:14px;color:var(--tinta-2);padding:9px 0;border-bottom:1px solid var(--linea)}
+.resumen-linea span:first-child{max-width:60%}
+.resumen-total{display:flex;justify-content:space-between;align-items:baseline;padding-top:14px;font-size:15px}
+.resumen-total b{font-family:"JetBrains Mono",monospace;font-size:26px;color:var(--tinta)}
+.resumen-nota{font-size:11px;color:var(--tinta-3);margin:12px 0 0;line-height:1.5}
+
+/* ── Secciones del formulario ── */
+.sec-tag{display:block;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--rojo-osc);font-weight:700;margin-bottom:12px}
+.campo{margin-bottom:14px}
+.campo label{display:block;font-size:12.5px;color:var(--tinta-3);margin-bottom:6px;letter-spacing:.02em}
+.campo input{
+  width:100%;min-height:46px;padding:0 14px;background:var(--papel-2);border:1px solid var(--linea-f);
+  border-radius:7px;color:var(--tinta);font-family:"Archivo",sans-serif;font-size:15px;
+  transition:border-color .16s,box-shadow .16s;
+}
+.campo input::placeholder{color:var(--tinta-3)}
+.campo input:focus{outline:none;border-color:var(--azul-med);box-shadow:0 0 0 3px rgba(46,108,184,.16)}
+
+/* ── Tarjeta de ejemplo (deshabilitada) ── */
+.tarjeta-wrap{position:relative}
+.tarjeta{
+  position:relative;border-radius:14px;padding:22px 22px 18px;overflow:hidden;
+  background:
+    repeating-linear-gradient(135deg, rgba(20,24,31,.035) 0 6px, transparent 6px 12px),
+    linear-gradient(150deg,var(--papel-3),var(--papel-2) 70%);
+  border:1px solid var(--linea-f);
+}
+.tarjeta-fila-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:26px}
+.tarjeta-chip{width:34px;height:24px;border-radius:4px;background:linear-gradient(135deg,var(--rojo-claro),var(--azul));flex:none}
+.tarjeta-bloqueada{
+  font-family:"JetBrains Mono",monospace;font-size:9px;font-weight:700;letter-spacing:.1em;
+  color:var(--tinta-3);border:1px solid var(--linea-f);border-radius:3px;padding:4px 7px;
+  display:flex;align-items:center;gap:5px;background:var(--papel-2);
+}
+.tarjeta-bloqueada svg{width:11px;height:11px;stroke:var(--tinta-3);fill:none;stroke-width:2}
+.campo-num{margin-bottom:18px}
+.campo-num input{
+  width:100%;background:transparent;border:none;padding:0;color:var(--tinta);
+  font-family:"JetBrains Mono",monospace;font-size:clamp(17px,4.6vw,21px);letter-spacing:.08em;
+}
+.tarjeta-fila-bot{display:flex;justify-content:space-between;gap:16px}
+.tarjeta-fila-bot .campo-mini{flex:1;min-width:0}
+.tarjeta-fila-bot label{display:block;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--tinta-3);margin-bottom:4px}
+.tarjeta-fila-bot input{
+  width:100%;background:transparent;border:none;padding:0;color:var(--tinta-2);
+  font-family:"JetBrains Mono",monospace;font-size:13.5px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+@media (max-width:400px){
+  .tarjeta-fila-bot{flex-wrap:wrap;row-gap:14px}
+  .tarjeta-fila-bot .campo-mini:first-child{flex-basis:100%}
+}
+input:disabled{-webkit-text-fill-color:currentColor;opacity:1;cursor:not-allowed}
+.tarjeta-nota{display:flex;gap:9px;align-items:flex-start;margin-top:12px;font-size:11.5px;color:var(--tinta-3);line-height:1.5}
+.tarjeta-nota svg{flex:none;width:14px;height:14px;margin-top:2px;stroke:var(--tinta-3);fill:none;stroke-width:2}
+
+.btn-primario{
+  display:flex;align-items:center;justify-content:center;min-height:52px;width:100%;
+  background:var(--rojo);color:#fff;border-radius:8px;text-decoration:none;
+  font-weight:700;font-size:15.5px;letter-spacing:.01em;transition:background .18s,transform .18s;
+}
+.btn-primario:hover{background:var(--rojo-osc);transform:translateY(-1px)}
+.btn-primario:active{transform:translateY(0) scale(.99)}
+.btn-primario:focus-visible{outline:2px solid var(--azul-med);outline-offset:3px}
+.btn-nota{text-align:center;font-size:11px;color:var(--tinta-3);margin:10px 0 0}
+
+/* ── Confianza ── */
+.confianza{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:13px}
+.confianza li{display:flex;gap:11px;align-items:flex-start;font-size:13px;color:var(--tinta-2);line-height:1.5}
+.ico-check{width:17px;height:17px;flex:none;margin-top:2px;fill:none;stroke:var(--azul-med);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+
+/* ── Pie de marca ── */
+.pie-marca{margin-top:56px;display:flex;flex-direction:column;gap:20px}
+.pie-aviso{border:1px dashed var(--linea-f);border-radius:8px;padding:16px 18px;background:var(--papel-3)}
+.pie-tag{display:inline-block;font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#fff;background:var(--tinta);padding:4px 9px;border-radius:3px;margin-bottom:10px}
+.pie-aviso p{margin:0;font-size:12.5px;color:var(--tinta-2);line-height:1.55}
+.pie-st{border:1px solid var(--linea-f);border-radius:10px;padding:26px 22px;background:
+  radial-gradient(120% 90% at 0% 0%, rgba(194,16,46,.06), transparent 55%),
+  radial-gradient(120% 90% at 100% 100%, rgba(22,56,107,.07), transparent 55%),var(--papel-2)}
+.pie-logo{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-size:24px;font-weight:800;letter-spacing:-.01em}
+.pie-logo span{color:var(--rojo-osc)}
+.pie-claim{margin:5px 0 0;font-size:10.5px;letter-spacing:.19em;text-transform:uppercase;color:var(--tinta-3);font-weight:700}
+.pie-txt{margin:16px 0 0;font-size:13.5px;color:var(--tinta-2);line-height:1.6;max-width:52ch}
+.pie-cta{display:inline-flex;align-items:center;margin-top:18px;padding:0 20px;min-height:44px;border:1.5px solid var(--azul);border-radius:999px;color:var(--azul);text-decoration:none;font-size:13.5px;font-weight:700;letter-spacing:.02em;transition:background .18s,color .18s}
+.pie-cta:hover{background:var(--azul);color:#fff}
+.pie-cta:focus-visible{outline:2px solid var(--azul-med);outline-offset:3px}
+.pie-legal{margin:14px 0 0;font-size:10.5px;color:var(--tinta-3);letter-spacing:.03em}
+
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}}
+</style>
+
+<div class="demo">
+  <span class="demo-tag">DEMO</span>
+  <p><strong>Esta pantalla no procesa ningún pago ni guarda datos.</strong> Es una demostración de SoluTech IA. Los campos de tarjeta están bloqueados y solo muestran valores de ejemplo.</p>
+</div>
+
+<div class="env">
+
+  <header class="top">
+    <div class="poste poste--sm" aria-hidden="true"><span class="poste-tapa"></span><span class="poste-cil"></span><span class="poste-tapa"></span></div>
+    <div>
+      <div class="top-n">BARBERÍA DEMO</div>
+      <div class="top-s">Barbería · Tu Ciudad</div>
+    </div>
+    <div class="top-m">
+      <b class="mono">Pago</b><br>
+      Paso 2 de 2
+    </div>
+  </header>
+
+  <div class="hero">
+    <div class="eyebrow entra entra-1">Confirmar reserva</div>
+    <h1 class="entra entra-2">Reserva tu análisis de visagismo</h1>
+    <p class="entra entra-3">Rellena tus datos y confirma. Toni revisará tu foto y tu informe llegará antes de tu cita.</p>
+  </div>
+
+  <div class="pago">
+
+    <div class="col-resumen">
+      <div class="resumen">
+        <div class="resumen-top"><b>Resumen del pedido</b></div>
+        <div class="resumen-body">
+          <div class="resumen-linea">
+            <span>Primera visita — análisis + corte</span>
+            <span class="mono">75,00 €</span>
+          </div>
+          <div class="resumen-total">
+            <span>Total</span>
+            <b class="mono">75,00 €</b>
+          </div>
+          <p class="resumen-nota">IVA incluido. Se cobra en la barbería el día de tu cita — esta demo no realiza ningún cargo.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-principal">
+
+      <section>
+        <span class="sec-tag">Tus datos</span>
+        <div class="campo">
+          <label for="f-nombre">Nombre y apellidos</label>
+          <input id="f-nombre" type="text" placeholder="Ej. Marc Ferrer">
+        </div>
+        <div class="campo">
+          <label for="f-email">Email</label>
+          <input id="f-email" type="email" placeholder="tu@email.com">
+        </div>
+        <div class="campo">
+          <label for="f-tel">Teléfono</label>
+          <input id="f-tel" type="tel" placeholder="600 000 000">
+        </div>
+      </section>
+
+      <section class="tarjeta-wrap">
+        <span class="sec-tag">Tarjeta (datos de ejemplo)</span>
+        <div class="tarjeta">
+          <div class="tarjeta-fila-top">
+            <div class="tarjeta-chip" aria-hidden="true"></div>
+            <div class="tarjeta-bloqueada">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+              BLOQUEADO
+            </div>
+          </div>
+          <div class="campo-num">
+            <label for="tj-num" style="display:block;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--tinta-3);margin-bottom:6px">Número de tarjeta</label>
+            <input id="tj-num" type="text" value="4242 4242 4242 4242" disabled>
+          </div>
+          <div class="tarjeta-fila-bot">
+            <div class="campo-mini">
+              <label for="tj-nombre">Titular</label>
+              <input id="tj-nombre" type="text" value="NOMBRE APELLIDOS" disabled>
+            </div>
+            <div class="campo-mini">
+              <label for="tj-cad">Caducidad</label>
+              <input id="tj-cad" type="text" value="12/29" disabled>
+            </div>
+            <div class="campo-mini">
+              <label for="tj-cvc">CVC</label>
+              <input id="tj-cvc" type="text" value="123" disabled>
+            </div>
+          </div>
+        </div>
+        <div class="tarjeta-nota">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+          <span>Campos bloqueados a propósito: no se puede escribir en ellos. Son solo para que veas cómo se vería la pantalla de pago real.</span>
+        </div>
+      </section>
+
+      <section>
+        <a class="btn-primario" href="/formulario">Simular pago y continuar</a>
+        <p class="btn-nota">No se realiza ningún cargo. Al continuar irás al formulario del análisis.</p>
+      </section>
+
+      <section>
+        <span class="sec-tag">Qué pasa con tus datos</span>
+        <ul class="confianza">
+          <li>
+            <svg class="ico-check" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6"/></svg>
+            Tus datos de contacto se usan solo para confirmarte la cita. No se comparten con terceros.
+          </li>
+          <li>
+            <svg class="ico-check" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6"/></svg>
+            Las fotos que subas para el análisis se eliminan automáticamente a los 90 días.
+          </li>
+          <li>
+            <svg class="ico-check" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6"/></svg>
+            Esta demostración no guarda ni transmite ningún dato de pago: los campos de tarjeta están bloqueados y no envían nada.
+          </li>
+        </ul>
+      </section>
+
+    </div>
+  </div>
+
+  <div class="pie-marca">
+    <div class="pie-aviso">
+      <span class="pie-tag">Pantalla de demostración</span>
+      <p>
+        Esta pantalla de pago es una <strong>demostración</strong> construida por SoluTech IA
+        (<strong>tu-dominio.com</strong>). «Barbería Demo» no existe y no se realiza ningún
+        cobro real: los campos de tarjeta están deshabilitados y muestran valores de ejemplo.
+      </p>
+    </div>
+    <div class="pie-st">
+      <div class="pie-logo">SoluTech<span>IA</span></div>
+      <p class="pie-claim">Consultoría de IA a medida</p>
+      <p class="pie-txt">
+        Construimos el sistema completo que hay detrás de esta demo: medición por visión
+        artificial, redacción anclada a los datos, simulación verificada y una experiencia de
+        venta con la marca de cada negocio.
+      </p>
+      <a class="pie-cta" href="https://tu-dominio.com">tu-dominio.com</a>
+      <p class="pie-legal">SoluTech IA es marca de Wixyn Tech, S.L.</p>
+    </div>
+  </div>
+
+</div>

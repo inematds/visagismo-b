@@ -1,0 +1,32 @@
+# Fotos de CLIENTES e informes generados. Nunca al repositorio.
+06-app/sesiones/
+_datos/
+
+# Claves. Nunca, bajo ningun concepto.
+.env
+.env.local
+.env.*.local
+
+# Tu marca aplicada (estado local del configurador)
+.marca-aplicada.json
+
+# Tu propio visor de ejemplo: lleva una cara dentro
+06-app/estatico/_visor-ejemplo.html
+
+# Entornos y temporales
+venv/
+__pycache__/
+*.pyc
+.DS_Store
+
+# Artefactos de build
+.vercel/
+.venv/
+.pytest_cache/
+data/
+.env.*
+!.env.example
+*.sqlite*
+node_modules/
+artifacts/
+04-mockup/

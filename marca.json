@@ -1,0 +1,17 @@
+{
+  "_lee_esto": "Cambia estos valores y ejecuta: python3 configura.py — se aplican a toda la web, al informe y al servidor. Puedes reejecutarlo las veces que quieras.",
+
+  "nombre_display": "Barbería Demo",
+  "nombre_logo": "BARBERÍA DEMO",
+  "ciudad": "Tu Ciudad",
+  "barbero": "Tu Barbero",
+  "dominio": "tu-dominio.com",
+
+  "color_principal": "#C2102E",
+  "color_principal_oscuro": "#8E0B21",
+  "color_principal_claro": "#E63946",
+  "color_secundario": "#16386B",
+  "color_secundario_medio": "#2E6CB8",
+  "color_secundario_claro": "#5AA9E6",
+  "color_papel": "#F4F1EC"
+}

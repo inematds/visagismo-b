@@ -1,0 +1,313 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tu cara, medida</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap">
+
+<style>{{ css }}</style>
+
+<div class="env">
+
+  <header class="top">
+    <div class="poste" aria-hidden="true"></div>
+    <div>
+      <div class="top-n">{{ barberia.nombre }}</div>
+      <div class="top-s">Barbería · {{ barberia.ciudad }}</div>
+    </div>
+    <div class="top-m">
+      <b class="mono">{{ cliente.expediente }}</b><br>
+      {{ cliente.nombre }} · {{ cliente.fecha }}
+    </div>
+  </header>
+
+  <div class="hero">
+    <div class="eyebrow">Análisis de visagismo</div>
+    <h1>{{ titular.linea1 }}<br>{{ titular.antes }}<em>{{ titular.enfasis }}</em>{{ titular.despues }}</h1>
+  </div>
+
+  <div class="analisis">
+
+    {{ visor }}
+
+    <div class="lect">
+
+      <section>
+        <div class="cab">
+          {% set ns = namespace(n=1) %}<div class="num">01</div>
+          <h2>Lo que hemos medido</h2>
+          <div class="lat">468 puntos</div>
+        </div>
+        <div class="col">
+          <p>
+            Hemos medido tu rostro sobre fotografía calibrada: <strong>{{ n_proporciones }} proporciones</strong>,
+            comparadas una a una con el canon clásico. Debajo tienes las
+            {{ calibres|length }} que más deciden en tu caso
+            {%- if n_fuera == 0 %} — y las {{ calibres|length }} caen dentro del canon.
+            {%- elif n_fuera == 1 %}: cuatro caen dentro del canon y una se sale.
+            {%- else %}: {{ calibres|length - n_fuera }} caen dentro del canon y {{ n_fuera }} se salen.{% endif %}
+          </p>
+          <p>
+            Esto no es una impresión a ojo. Sobre tu foto se localizan 468 puntos anatómicos
+            y se calculan las distancias entre ellos. Todo lo que ves dibujado sale de ahí.
+          </p>
+        </div>
+
+        <div class="cal">
+          {% for c in calibres %}
+          <div>
+            <div class="cal-h">
+              <div class="cal-n">{{ c.nombre }}<small>{{ c.sub }}</small></div>
+              {% if c.contador %}
+              <div class="cal-v {{ c.estado }} mono cuenta" style="--desde:{{ c.contador.desde }};--hasta:{{ c.contador.hasta }}"></div>
+              {% else %}
+              <div class="cal-v {{ c.estado }} mono">{{ c.valor_txt }}</div>
+              {% endif %}
+            </div>
+            <div class="regla">
+              <div class="pista"></div>
+              <div class="canon" style="left:{{ '%.0f'|format(c.canon_izq) }}%;right:{{ '%.0f'|format(c.canon_der) }}%"></div>
+              <div class="mk {{ 'ok' if c.dentro else '' }}" style="left:{{ '%.0f'|format(c.marca) }}%"></div>
+            </div>
+            <div class="cal-pie">
+              <span class="mono">{{ c.esc_min }}</span><span>{{ c.pie|safe }}</span><span class="mono">{{ c.esc_max }}</span>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </section>
+
+      <section>
+        <div class="cab">
+          {% set ns.n = ns.n + 1 %}<div class="num">{{ "%02d"|format(ns.n) }}</div>
+          <h2>El diagnóstico</h2>
+          <div class="lat">{{ morfotipo }}</div>
+        </div>
+        <div class="col">
+          {% for p in diagnostico %}<p>{{ p|safe }}</p>{% endfor %}
+        </div>
+
+        <div class="veredicto col">
+          <h3>Qué buscamos</h3>
+          {% for p in objetivo %}<p>{{ p|safe }}</p>{% endfor %}
+        </div>
+      </section>
+
+    </div><!-- /lect -->
+  </div><!-- /analisis -->
+
+  <div class="resto">
+
+    {% if simulacion %}
+    <section>
+      <div class="cab">
+        {% set ns.n = ns.n + 1 %}<div class="num">{{ "%02d"|format(ns.n) }}</div>
+        <h2>Cómo quedarías</h2>
+        <div class="lat">Simulación</div>
+      </div>
+      <div class="figs">
+        <figure class="fig">
+          <img src="{{ simulacion.antes }}" alt="Fotografía actual del cliente." loading="lazy">
+          <figcaption><b>Hoy</b>{{ simulacion.pie_antes }}</figcaption>
+        </figure>
+        <figure class="fig">
+          <img src="{{ simulacion.despues }}" alt="Simulación generada por inteligencia artificial del corte propuesto." loading="lazy">
+          <figcaption><b>Propuesta</b>{{ simulacion.pie_despues }}</figcaption>
+        </figure>
+      </div>
+      {% if simulacion.antes_perfil %}
+      <p class="col" style="margin-top:24px">Y así te quedaría de perfil:</p>
+      <div class="figs">
+        <figure class="fig">
+          <img src="{{ simulacion.antes_perfil }}" alt="Fotografía de perfil actual del cliente." loading="lazy">
+          <figcaption><b>Hoy</b>Tu perfil tal cual lo subiste.</figcaption>
+        </figure>
+        <figure class="fig">
+          <img src="{{ simulacion.despues_perfil }}" alt="Simulación de perfil generada por inteligencia artificial." loading="lazy">
+          <figcaption><b>Propuesta</b>Laterales con densidad y nuca con continuidad.</figcaption>
+        </figure>
+      </div>
+      {% endif %}
+
+      <div class="ia">
+        <div class="ia-ico" aria-hidden="true">IA</div>
+        <div>
+          <b>Imagen generada por inteligencia artificial</b>
+          La simulación de la derecha se ha creado artificialmente a partir de tu fotografía.
+          Es una orientación visual, <strong>no una promesa del resultado</strong>: depende de tu
+          densidad, tu remolino y cómo caiga tu pelo.
+        </div>
+      </div>
+    </section>
+    {% endif %}
+
+    {% if estilos %}
+    <section>
+      <div class="cab">
+        {% set ns.n = ns.n + 1 %}<div class="num">{{ "%02d"|format(ns.n) }}</div>
+        <h2>{{ 'Los cortes que te funcionan' if estilos|length > 1 else 'El corte que te funciona' }}</h2>
+        <div class="lat">{{ estilos|length }} {{ 'opciones' if estilos|length > 1 else 'opción' }}</div>
+      </div>
+      <div class="estilos">
+        {% for e in estilos %}
+        <article class="estilo{% if loop.index0 == mejor_estilo %} estilo-top{% endif %}">
+          <div class="estilo-cab">
+            <h3>{{ e.nombre }}</h3>
+            <div class="encaje" title="Lo bien que encaja con tus proporciones">
+              <span class="mono">{{ e.encaje }}</span><small>/10</small>
+            </div>
+          </div>
+          {% if loop.index0 == mejor_estilo %}<div class="sello">El que mejor te queda</div>{% endif %}
+          <p>{{ e.por_que }}</p>
+          <dl class="estilo-dl">
+            <dt>Cómo pedirlo</dt><dd>{{ e.como_pedirlo }}</dd>
+            <dt>Mantenimiento</dt><dd>{{ e.mantenimiento }}</dd>
+          </dl>
+        </article>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+
+    <section>
+      <div class="cab">
+        {% set ns.n = ns.n + 1 %}<div class="num">{{ "%02d"|format(ns.n) }}</div>
+        <h2>Qué le pides a tu barbero</h2>
+        <div class="lat">Ficha</div>
+      </div>
+      <div class="col"><p>Enséñale esto a quien te corte —aunque no sea aquí— y no habrá interpretaciones.</p></div>
+      {% if receta.aviso_tiempo %}
+      <div class="ia" style="border-left-color:var(--acero)">
+        <div class="ia-ico" aria-hidden="true" style="background:var(--acero)">!</div>
+        <div><b>Ajustado a tu rutina</b>{{ receta.aviso_tiempo }}</div>
+      </div>
+      {% endif %}
+      <div class="ficha">
+        <div class="ficha-top">
+          <b>Ficha de ejecución · {{ cliente.expediente }}</b>
+          <span>Rostro {{ morfotipo }}{% if hallazgo_principal %} · {{ hallazgo_principal.titulo|lower }}{% endif %}</span>
+        </div>
+        <dl>
+          <dt>Arriba</dt>
+          <dd>Dejar <span class="mono">{{ receta.largo_cm[0] }}–{{ receta.largo_cm[1] }} cm</span>.
+            {{ receta.forma|capitalize }}. Entresacar solo puntas para dar textura;
+            no vaciar el interior o pierde cuerpo.</dd>
+
+          <dt>Frontal</dt>
+          <dd><span class="mono">{{ receta.frontal_cm[0] }}–{{ receta.frontal_cm[1] }} cm</span>.
+            {{ receta.flequillo[0]|capitalize }}: {{ receta.flequillo[1] }}.
+            {{ receta.flequillo[2]|capitalize }}.
+            {% if 'NO_FRENTE_DESPEJADA' in receta.directivas %}<strong>Nunca flequillo recto</strong> ni peinado hacia atrás.{% endif %}</dd>
+
+          <dt>Raya</dt>
+          <dd>{{ receta.raya[0]|capitalize }}: {{ receta.raya[1] }}.</dd>
+
+          <dt>Laterales</dt>
+          <dd>{{ receta.laterales[0]|capitalize }}. Máquina <span class="mono">{{ receta.laterales[1] }}</span>:
+            {{ receta.laterales[2] }}.</dd>
+
+          <dt>Patillas</dt>
+          <dd>{{ receta.patillas[0]|capitalize }}: {{ receta.patillas[1] }}.</dd>
+
+          <dt>Nuca</dt>
+          <dd>{{ receta.nuca[0]|capitalize }}, {{ receta.nuca[1] }}.</dd>
+
+          {% if receta.barba %}
+          <dt>Barba</dt>
+          <dd><span class="mono">{{ receta.barba[0] }}</span> {{ receta.barba[1] }}.
+            {{ receta.barba[2]|capitalize }}.
+            {% if receta.cuello_barba %}Cuello perfilado <span class="mono">{{ receta.cuello_barba }}</span>.{% endif %}</dd>
+          {% endif %}
+
+          <dt>Cejas</dt>
+          <dd>Solo pelos sueltos. <strong>No adelgazar</strong>: son el marco que sostiene el peso visual arriba.</dd>
+
+          <dt>Producto</dt>
+          <dd>{{ receta.producto[0]|capitalize }}: {{ receta.producto[1] }}.
+            <span class="mono">{{ receta.minutos }} min</span>, el tiempo que declaraste.</dd>
+        </dl>
+      </div>
+    </section>
+
+    <section>
+      <div class="cab">
+        {% set ns.n = ns.n + 1 %}<div class="num">{{ "%02d"|format(ns.n) }}</div>
+        <h2>Qué evitar</h2>
+        <div class="lat">{{ evitar|length }} error{{ 'es' if evitar|length > 1 else '' }}</div>
+      </div>
+      <div class="evitar col">
+        {% for titulo, razon in evitar %}
+        <div class="ev"><div class="ev-x" aria-hidden="true">✕</div>
+          <div><b>{{ titulo }}</b> {{ razon }}</div></div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section>
+      <div class="cab">
+        {% set ns.n = ns.n + 1 %}<div class="num">{{ "%02d"|format(ns.n) }}</div>
+        <h2>Tu plan</h2>
+        <div class="lat">{{ plan|length }} citas</div>
+      </div>
+      <div class="col"><p>Un corte así no se consigue en una sesión: se construye dejando crecer con intención.</p></div>
+      <div class="plan">
+        {% for c in plan %}
+        <div class="cita {{ 'hoy' if loop.first else '' }}">
+          <div class="cita-f">{{ c.fecha }}</div>
+          <div><b>{{ c.titulo }}</b><span>{{ c.detalle }}</span>
+            <span class="dur">{{ 'Hoy · ' if loop.first else '' }}{{ c.duracion }}</span></div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <div class="firma">
+      <div class="firma-n">{{ barberia.barbero }}</div>
+      <div class="firma-r">Barbero</div>
+      <div class="firma-d">
+        He revisado personalmente las mediciones, la propuesta y la simulación antes de
+        enviártelo. Si algo no te encaja, lo hablamos en la silla.
+      </div>
+    </div>
+
+    <div class="legal">
+      <p>
+        <strong>Cómo se ha hecho.</strong> Las proporciones se miden con visión por computador
+        sobre las fotografías facilitadas. El sistema mide la morfología del rostro;
+        <strong>no identifica a la persona ni guarda ningún patrón que permita reconocerla</strong>.
+        El texto y la simulación se generan con asistencia de inteligencia artificial a partir
+        de esas medidas, y los revisa y firma el barbero antes del envío.
+      </p>
+      <p>
+        Las fotografías y las medidas se eliminan automáticamente a los 90 días. No se usan para
+        entrenar ningún sistema ni se publican salvo autorización expresa y por separado.
+      </p>
+    </div>
+
+  </div><!-- /resto -->
+
+  <div class="pie-marca">
+    <div class="pie-aviso">
+      <span class="pie-tag">Informe de ejemplo</span>
+      <p>
+        Este documento es una <strong>demostración</strong>. «{{ barberia.nombre|capitalize }}»
+        y su barbero no existen: se han inventado para enseñar cómo quedaría el informe con la
+        marca de una barbería real. Las mediciones y la simulación sí son reales.
+      </p>
+    </div>
+
+    <div class="pie-st">
+      <div class="pie-logo">SoluTech<span>IA</span></div>
+      <p class="pie-claim">Consultoría de IA a medida</p>
+      <p class="pie-txt">
+        Construimos el sistema que hay detrás de este informe: medición por visión artificial,
+        redacción anclada a los datos, simulación verificada y entrega con la marca de cada
+        negocio. Si en el tuyo hay un criterio experto que hoy regaláis de palabra,
+        probablemente se pueda convertir en un producto.
+      </p>
+      <a class="pie-cta" href="https://tu-dominio.com">tu-dominio.com</a>
+      <p class="pie-legal">SoluTech IA es marca de Wixyn Tech, S.L.</p>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,188 @@
+[
+ {
+  "texto": "El cabello crece de media 1 a 1,25 cm al mes, unos 15 cm al año, aunque varía según la persona y el origen étnico.",
+  "categoria": "pelo",
+  "fuente": "American Academy of Dermatology",
+  "fiabilidad": "alta"
+ },
+ {
+  "texto": "Un cuero cabelludo sano tiene entre 80.000 y 120.000 folículos pilosos, cada uno con su propio ciclo de vida.",
+  "categoria": "pelo",
+  "fuente": "Cleveland Clinic",
+  "fiabilidad": "alta"
+ },
+ {
+  "texto": "Perder entre 50 y 100 cabellos al día es normal: son solo el 0,1% del total, que se renueva constantemente.",
+  "categoria": "pelo",
+  "fuente": "American Academy of Dermatology",
+  "fiabilidad": "alta"
+ },
+ {
+  "texto": "El pelo vive tres fases: crece entre 2 y 6 años, descansa dos semanas y cae tras 3 o 4 meses. Luego vuelve a empezar.",
+  "categoria": "pelo",
+  "fuente": "Altmeyers Encyclopedia of Dermatology",
+  "fiabilidad": "alta"
+ },
+ {
+  "texto": "Que el pelo sea liso o rizado depende de la forma del folículo: redondo da pelo liso, ovalado y curvado da pelo rizado.",
+  "categoria": "pelo",
+  "fuente": "Northwestern University, The Science of Curls",
+  "fiabilidad": "media"
+ },
+ {
+  "texto": "Las canas aparecen cuando se agotan las células que producen melanina y se acumula peróxido de hidrógeno en el folículo.",
+  "categoria": "pelo",
+  "fuente": "Seiberg, Int. Journal of Cosmetic Science, 2013",
+  "fiabilidad": "alta"
+ },
+ {
+  "texto": "Un cabello sano aguanta un tirón de unos 100 gramos antes de romperse, comparable a un hilo de acero fino.",
+  "categoria": "pelo",
+  "fuente": "Estudios de tracción capilar (ASTM D2256)",
+  "fiabilidad": "media"
+ },
+ {
+  "texto": "El cabello mojado se estira hasta un 30% sin dañarse. Por eso no se corta igual en mojado que en seco.",
+  "categoria": "pelo",
+  "fuente": "Tricología profesional",
+  "fiabilidad": "media"
+ },
+ {
+  "texto": "La barba crece unos 0,4 mm al día, algo más de un centímetro al mes, aunque varía mucho de un hombre a otro.",
+  "categoria": "barba",
+  "fuente": "Dermatología del vello facial",
+  "fiabilidad": "media"
+ },
+ {
+  "texto": "No es la testosterona la que hace crecer la barba, sino la DHT y lo sensible que sea cada folículo a ella.",
+  "categoria": "barba",
+  "fuente": "Inui e Itami, Experimental Dermatology, 2013",
+  "fiabilidad": "alta"
+ },
+ {
+  "texto": "El pelo de la barba puede ser el doble de grueso que el del cuero cabelludo, porque nace en folículos más grandes.",
+  "categoria": "barba",
+  "fuente": "Biología del folículo terminal facial",
+  "fiabilidad": "media"
+ },
+ {
+  "texto": "En el pelo rizado el folículo crece curvado, así que al afeitar tiende a clavarse en la piel. De ahí los granos.",
+  "categoria": "barba",
+  "fuente": "DermNet NZ; Merck Manual",
+  "fiabilidad": "alta"
+ },
+ {
+  "texto": "La barba suele encanecer antes que el pelo de la cabeza, y la ciencia todavía no tiene claro del todo por qué.",
+  "categoria": "barba",
+  "fuente": "NYU Langone",
+  "fiabilidad": "media"
+ },
+ {
+  "texto": "Afeitarse no hace que el pelo salga más grueso ni más oscuro. Es un mito desmentido ya en 1928.",
+  "categoria": "barba",
+  "fuente": "British Medical Journal, Medical Myths, 2007",
+  "fiabilidad": "alta"
+ },
+ {
+  "texto": "En la Edad Media los barberos también operaban: hacían sangrías, sacaban muelas y cosían heridas.",
+  "categoria": "historia",
+  "fuente": "Hektoen International",
+  "fiabilidad": "media"
+ },
+ {
+  "texto": "El rojo del poste de barbero representa la sangre y el blanco las vendas. Un estatuto inglés de 1540 obligó a usar esos colores.",
+  "categoria": "historia",
+  "fuente": "Worshipful Company of Barbers",
+  "fiabilidad": "alta"
+ },
+ {
+  "texto": "El azul del poste no viene de la cirugía medieval: se añadió en Estados Unidos como guiño a la bandera.",
+  "categoria": "historia",
+  "fuente": "History.com",
+  "fiabilidad": "media"
+ },
+ {
+  "texto": "En 1745 el Parlamento inglés separó por ley a cirujanos y barberos, tras dos siglos compartiendo gremio.",
+  "categoria": "historia",
+  "fuente": "Acta 18 George II c.15",
+  "fiabilidad": "alta"
+ },
+ {
+  "texto": "En el Antiguo Egipto se han hallado navajas de cobre y oro en tumbas. Los sacerdotes debían afeitarse el cuerpo entero.",
+  "categoria": "historia",
+  "fuente": "Herodoto, Historias, libro II",
+  "fiabilidad": "alta"
+ },
+ {
+  "texto": "En Roma, el primer afeitado de un joven era un rito religioso: el pelo se ofrecía a Júpiter dentro de una caja.",
+  "categoria": "historia",
+  "fuente": "Fuentes clásicas romanas",
+  "fiabilidad": "alta"
+ },
+ {
+  "texto": "Las barberías griegas del siglo V a.C. eran punto de reunión en el ágora. Allí se hablaba de política y de filosofía.",
+  "categoria": "historia",
+  "fuente": "Historiografía clásica",
+  "fiabilidad": "media"
+ },
+ {
+  "texto": "El corte fade nació en el ejército de Estados Unidos en los años 40, y lo llevaron a la calle los veteranos que volvían a casa.",
+  "categoria": "historia",
+  "fuente": "Historia de la barbería afroamericana",
+  "fiabilidad": "media"
+ },
+ {
+  "texto": "Movember empezó en 2003 en un bar de Melbourne: dos amigos retaron a treinta tipos a dejarse bigote por diez dólares.",
+  "categoria": "historia",
+  "fuente": "Movember Foundation",
+  "fiabilidad": "alta"
+ },
+ {
+  "texto": "El término visagismo lo registró como marca el peluquero francés Fernand Aubry en 1936, inspirado en la palabra paisajista.",
+  "categoria": "visagismo",
+  "fuente": "CNRTL (CNRS), registro oficial 6-abr-1937",
+  "fiabilidad": "alta"
+ },
+ {
+  "texto": "Dividir la cara en tres tercios iguales viene del arquitecto romano Vitrubio. Leonardo da Vinci lo retomó siglos después.",
+  "categoria": "visagismo",
+  "fuente": "Vitrubio; cuadernos de Leonardo",
+  "fiabilidad": "alta"
+ },
+ {
+  "texto": "El canon de los quintos usa el ancho de un ojo como unidad: una cara equilibrada mide cinco ojos de ancho.",
+  "categoria": "visagismo",
+  "fuente": "Canon clásico Vitrubio-Leonardo",
+  "fiabilidad": "alta"
+ },
+ {
+  "texto": "La línea E de Ricketts une la punta de la nariz con la barbilla. En un perfil equilibrado, los labios quedan detrás de ella.",
+  "categoria": "visagismo",
+  "fuente": "Robert Ricketts, ortodoncia",
+  "fiabilidad": "alta"
+ },
+ {
+  "texto": "El ángulo nasolabial ronda los 90-95 grados en hombres y 100-105 en mujeres, y varía según el origen étnico.",
+  "categoria": "visagismo",
+  "fuente": "Estudios de rinoplastia estética",
+  "fiabilidad": "alta"
+ },
+ {
+  "texto": "El ángulo de la mandíbula, muy abierto al nacer, se va cerrando hasta unos 120-130 grados en la edad adulta.",
+  "categoria": "visagismo",
+  "fuente": "Estudios cefalométricos, PMC",
+  "fiabilidad": "alta"
+ },
+ {
+  "texto": "Los cánones de proporción facial que aún se usan vienen del escultor griego Policleto, en un libro perdido que solo conocemos por citas.",
+  "categoria": "visagismo",
+  "fuente": "Vitrubio, De Architectura",
+  "fiabilidad": "alta"
+ },
+ {
+  "texto": "El índice facial clasifica los rostros en anchos, medios o alargados según su altura entre su anchura. Se sigue usando en antropología.",
+  "categoria": "visagismo",
+  "fuente": "Estudios antropométricos, PMC",
+  "fiabilidad": "alta"
+ }
+]

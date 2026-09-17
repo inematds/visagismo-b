@@ -1,0 +1,46 @@
+# Imagen para Vercel Functions con contenedor propio.
+# Es el mismo contenido que 06-app/Dockerfile, movido a la raiz y con el
+# puerto que Vercel espera. Vercel detecta este fichero solo y enruta todo
+# el trafico aqui.
+FROM python:3.11-slim
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        libgl1 \
+        libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# mediapipe declara opencv-contrib-python (con GUI) + jax + jaxlib +
+# matplotlib + sentencepiece + sounddevice como obligatorias. Ninguna la usa
+# esta app, y opencv-contrib-python COLISIONA con opencv-python-headless:
+# ambos escriben en cv2/ y gana el ultimo instalado, de forma no determinista.
+# Por eso --no-deps + la lista minima. matplotlib SI hace falta: mediapipe
+# la importa al cargarse y sin ella el paquete ni se puede importar.
+RUN pip install --no-cache-dir --no-deps mediapipe==0.10.21 \
+    && pip install --no-cache-dir \
+        "numpy<2" \
+        opencv-python-headless==4.10.0.84 \
+        matplotlib \
+        absl-py \
+        "attrs>=19.1.0" \
+        "flatbuffers>=2.0" \
+        "protobuf<5,>=4.25.3" \
+        fastapi \
+        "uvicorn[standard]" \
+        python-multipart \
+        jinja2 \
+        fal-client \
+        pillow-heif
+
+COPY 03-motor/ ./03-motor/
+COPY 06-app/ ./06-app/
+
+WORKDIR /app/06-app
+RUN mkdir -p sesiones
+
+ENV PYTHONUNBUFFERED=1
+# Vercel usa el puerto 80 por defecto en contenedores.
+ENV PORT=80
+EXPOSE 80
+CMD ["sh", "-c", "uvicorn servidor:app --host 0.0.0.0 --port ${PORT:-80}"]
